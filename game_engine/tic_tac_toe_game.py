@@ -1,9 +1,11 @@
-from typing import Callable, List
 from copy import deepcopy
-
+from typing import Callable, List, Optional
 from .tic_tac_toe_common_lib import TicTacToeTurn, TicTacToeGameInfo, AbstractTicTacToeGame
 
+
 class TicTacToeGame(AbstractTicTacToeGame):
+    """Наследуемся от абстрактного класса и реализуем ручками все методы"""
+
     def __init__(self, game_id: str, first_player_id: str, second_player_id: str,
                  strategy: Callable[[TicTacToeGameInfo], TicTacToeTurn] = None) -> None:
         self.__game_id = game_id
@@ -12,25 +14,14 @@ class TicTacToeGame(AbstractTicTacToeGame):
         self.__winner_id = ""
         self.__strategy = strategy
         self.__turns: List[TicTacToeTurn] = []
+        self.__current_player_id = ""
 
     def is_turn_correct(self, turn: TicTacToeTurn) -> bool:
         x = turn.x_coordinate
         y = turn.y_coordinate
-        whatreturn: False
-        if (0 <= x <= 2) and (0 <= y <= 2) and (self.get_game_info().field[x][y] == " ") and (self.__winner_id == ""):
-            if self.__turns == []:
-                if turn.player_id == self.__first_player_id:
-                    whatreturn =  True
-                else:
-                    whatreturn =  False
-            else:
-                if self.__turns[-1].player_id != turn.player_id:
-                    whatreturn =  True
-                else:
-                    whatreturn =  False
-            #whatreturn =  True
-        else:
-            whatreturn =  False
+        whatreturn = False
+        if (0 <= x <= 2) and (0 <= y <= 2) and (self.get_game_info().field[x][y] == " ") and (self.__winner_id == "") and (self.current_player_id() == turn.player_id):
+            whatreturn = True
         return whatreturn
 
     def do_turn(self, turn: TicTacToeTurn) -> TicTacToeGameInfo:
@@ -41,6 +32,10 @@ class TicTacToeGame(AbstractTicTacToeGame):
         return self.get_game_info()
 
     def win(self, turn: TicTacToeGameInfo):
+        if len(self.__turns) == 9:
+            whoiswin = "draw"
+            return whoiswin
+
         xo = ["X", "O"]
         whoiswin = ""
        #horizontale
@@ -83,6 +78,16 @@ class TicTacToeGame(AbstractTicTacToeGame):
                     whoiswin = self.__second_player_id
         return whoiswin
 
+    def current_player_id(self):
+        if (self.__turns == []) or (len(self.__turns)%2 == 0):
+            self.__current_player_id = self.__first_player_id
+        else:
+            if len(self.__turns) % 2 == 0:
+                self.__current_player_id = self.__first_player_id
+            else:
+                self.__current_player_id = self.__second_player_id
+
+
     def get_game_info(self) -> TicTacToeGameInfo:
         result = TicTacToeGameInfo(
             game_id=self.__game_id,
@@ -103,3 +108,4 @@ class TicTacToeGame(AbstractTicTacToeGame):
                 ch = "O"
             result.field[turn.x_coordinate][turn.y_coordinate] = ch
         return result
+        
