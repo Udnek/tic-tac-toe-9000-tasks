@@ -32,8 +32,9 @@ class TicTacToeGame(AbstractTicTacToeGame):
         return self.get_game_info()
 
     def win(self, turn: TicTacToeGameInfo):
+        #if len(self.__turns) == 8:    
         if len(self.__turns) == 9:
-            whoiswin = "draw"
+            whoiswin = "Draw"
             return whoiswin
 
         xo = ["X", "O"]
