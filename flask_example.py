@@ -19,7 +19,7 @@ def index():
 def hello(name):
     return f'Hello, {name}'
 
-@app.route('/hello', methods=["GET"])
+@app.route('/hello', methods=["GET"]) 
 def hello_get():
     name = request.args["name"]
     return f'Hello, {name}'

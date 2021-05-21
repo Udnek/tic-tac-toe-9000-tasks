@@ -14,7 +14,7 @@ class TicTacToeGame(AbstractTicTacToeGame):
         self.__winner_id = ""
         self.__strategy = strategy
         self.__turns: List[TicTacToeTurn] = []
-        self.__current_player_id = ""
+        #self.__current_player_id = ""
 
     def is_turn_correct(self, turn: TicTacToeTurn) -> bool:
         x = turn.x_coordinate
@@ -27,15 +27,33 @@ class TicTacToeGame(AbstractTicTacToeGame):
     def do_turn(self, turn: TicTacToeTurn) -> TicTacToeGameInfo:
         if self.is_turn_correct(turn) == True:
             self.__turns.append(turn)
-            self.__winner_id = self.win(self.get_game_info())
-
+            self.__winner_id = self.win(self.get_game_info().field, True)
         return self.get_game_info()
 
-    def win(self, turn: TicTacToeGameInfo):
-        #if len(self.__turns) == 8:    
-        if len(self.__turns) == 9:
-            whoiswin = "Draw"
-            return whoiswin
+    def win(self, field, checkturns):
+        if (checkturns) and (len(self.__turns) == 8):
+            print(field)
+            for i in range(3):
+                for j in range(3):
+                    if field[i][j] == " ":
+                        cords = [i,j]
+
+            field2 = field[:]
+            if self.current_player_id() == self.__first_player_id:
+                field2[cords[0]][cords[1]] = "X"
+            else:
+                field2[cords[0]][cords[1]] = "O"
+
+            winnerpred = self.win(field2, False)
+            if winnerpred == self.__first_player_id:
+                self.winner_id = self.__first_player_id
+                return self.__first_player_id
+            elif winnerpred == self.__second_player_id:
+                self.winner_id = self.__second_player_id
+                return self.__second_player_id
+            else:
+                self.winner_id = "Draw"
+                return "Draw"
 
         xo = ["X", "O"]
         whoiswin = ""
@@ -44,7 +62,7 @@ class TicTacToeGame(AbstractTicTacToeGame):
             for i in range(3):
                 combo = 0
                 for j in range(3):
-                    if turn.field[i][j] == sym:
+                    if field[i][j] == sym:
                         combo += 1
                 if combo == 3:
                     if sym == "X":
@@ -56,7 +74,7 @@ class TicTacToeGame(AbstractTicTacToeGame):
             for i in range(3):
                 combo = 0
                 for j in range(3):
-                    if turn.field[j][i] == sym:
+                    if field[j][i] == sym:
                         combo += 1
                 if combo == 3:
                     if sym == "X":
@@ -65,28 +83,37 @@ class TicTacToeGame(AbstractTicTacToeGame):
                         whoiswin = self.__second_player_id
         #from left up to right down"""
         for sym in xo:
-            if (turn.field[0][0]==sym)and(turn.field[1][1]==sym)and(turn.field[2][2]==sym):
+            if (field[0][0]==sym)and(field[1][1]==sym)and(field[2][2]==sym):
                 if sym == "X":
                     whoiswin = self.__first_player_id
                 else:
                     whoiswin = self.__second_player_id
         #from right up to left down"""
         for sym in xo:
-            if (turn.field[0][2] == sym)and(turn.field[1][1] == sym)and(turn.field[2][0] == sym):
+            if (field[0][2] == sym)and(field[1][1] == sym)and(field[2][0] == sym):
                 if sym == "X":
                     whoiswin = self.__first_player_id
                 else:
                     whoiswin = self.__second_player_id
+        
+        if (len(self.__turns) == 9) and whoiswin == "":
+            whoiswin = "Draw"
+            return whoiswin
+        self.__winner_id = whoiswin
         return whoiswin
 
     def current_player_id(self):
         if (self.__turns == []) or (len(self.__turns)%2 == 0):
-            self.__current_player_id = self.__first_player_id
+            #self.__current_player_id = self.__first_player_id
+            return self.__first_player_id
         else:
             if len(self.__turns) % 2 == 0:
-                self.__current_player_id = self.__first_player_id
+                #self.__current_player_id = self.__first_player_id
+                return self.__first_player_id
             else:
-                self.__current_player_id = self.__second_player_id
+                #self.__current_player_id = self.__second_player_id
+                return self.__second_player_id
+
 
 
     def get_game_info(self) -> TicTacToeGameInfo:
