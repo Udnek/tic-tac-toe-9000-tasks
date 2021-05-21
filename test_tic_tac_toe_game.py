@@ -1,6 +1,5 @@
 from game_engine import TicTacToeGame, TicTacToeGameInfo, TicTacToeTurn
 
-
 def test_scenario():
     game = TicTacToeGame(
         game_id="0001",
@@ -11,7 +10,7 @@ def test_scenario():
     assert game.get_game_info() == TicTacToeGameInfo(
         game_id="0001",
         field=[
-            [" ", " ", " "],
+            [" ", " ", " "],   
             [" ", " ", " "],
             [" ", " ", " "]
         ],
@@ -27,7 +26,7 @@ def test_scenario():
             x_coordinate=0,
             y_coordinate=0
         )
-    ) == True
+    ) == True ##################################
 
     assert game.is_turn_correct(
         TicTacToeTurn(
@@ -66,7 +65,7 @@ def test_scenario():
             x_coordinate=0,
             y_coordinate=0
         )
-    ) == TicTacToeGameInfo(
+    ) == TicTacToeGameInfo(     
         game_id="0001",
         field=[
             ["X", " ", " "],
@@ -152,4 +151,3 @@ def test_scenario():
             y_coordinate=2
         )
     ) == False
-
